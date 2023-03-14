@@ -24,6 +24,15 @@ function App() {
     setTodo("");
   };
 
+  function handleOnDragEnd(result) {
+    console.log(result);
+    if (!result.destination) return;
+    const items = Array.from(todoList);
+    const [reorderedItem] = items.splice(result.source.index, 1);
+    items.splice(result.destination.index, 0, reorderedItem);
+    setTodoList(items);
+  }
+
   // render
   return (
     <div className="App">
@@ -41,23 +50,41 @@ function App() {
         </div>
         {todo}
       </header>
-      <DragDropContext>
+      <DragDropContext onDragEnd={handleOnDragEnd}>
         <div className="todos-container">
-          <div className="board-column">
-            <h2>To Do</h2>
-            <div className="todo-todos">
-              <li>example</li>
-              <ul>
-                {todoList.map((todo) => {
-                  return (
-                    <li className="note" key={todo.id}>
-                      {todo.todo}
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          </div>
+          <Droppable droppableId="todo-drop-zone">
+            {(provided) => (
+              <div className="board-column">
+                <h2>To Do</h2>
+                <div className="todo-todos">
+                  <li>example</li>
+                  <ul {...provided.droppableProps} ref={provided.innerRef}>
+                    {todoList.map((todo, index) => {
+                      return (
+                        <Draggable
+                          key={todo.id}
+                          draggableId={todo.id.toString()}
+                          index={index}
+                        >
+                          {(provided) => (
+                            <li
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              ref={provided.innerRef}
+                              className="note"
+                            >
+                              {todo.todo}
+                            </li>
+                          )}
+                        </Draggable>
+                      );
+                    })}
+                    {provided.placeholder}
+                  </ul>
+                </div>
+              </div>
+            )}
+          </Droppable>
           <div className="board-column">
             <h2>Done</h2>
             <div className="done-todos">
