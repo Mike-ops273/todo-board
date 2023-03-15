@@ -26,11 +26,49 @@ function App() {
 
   function handleOnDragEnd(result) {
     console.log(result);
+
+    // invalid destination
     if (!result.destination) return;
+    //same destination and index
+    if (
+      result.destination.droppableId === result.source.droppableId &&
+      result.destination.index === result.source.index
+    )
+      return;
+
+    // now initialize helper variables for valid moves
+    let task;
+    const undone = todoList;
+    const done = doneList;
+
+    // check origin and remove task
+    if (result.source.droppableId === "todo-drop-zone") {
+      task = undone[result.source.index];
+      undone.splice(result.source.index, 1);
+    } else {
+      //if source id is done-drop-zone
+      task = done[result.source.index];
+      done.splice(result.source.index, 1);
+    }
+
+    // add task to new zone
+    if (result.destination.droppableId === "todo-drop-zone") {
+      undone.splice(result.destination.index, 0, task);
+    } else {
+      // if destination id is done-drop-zone
+      done.splice(result.destination.index, 0, task);
+    }
+
+    //finally update state
+    setTodoList(undone);
+    setDoneList(done);
+
+    /*
     const items = Array.from(todoList);
     const [reorderedItem] = items.splice(result.source.index, 1);
     items.splice(result.destination.index, 0, reorderedItem);
     setTodoList(items);
+    */
   }
 
   // render
@@ -56,9 +94,13 @@ function App() {
             {(provided) => (
               <div className="board-column">
                 <h2>To Do</h2>
-                <div className="todo-todos">
+                <div
+                  className="todo-todos"
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                >
                   <li>example</li>
-                  <ul {...provided.droppableProps} ref={provided.innerRef}>
+                  <ul>
                     {todoList.map((todo, index) => {
                       return (
                         <Draggable
@@ -85,12 +127,43 @@ function App() {
               </div>
             )}
           </Droppable>
-          <div className="board-column">
-            <h2>Done</h2>
-            <div className="done-todos">
-              <li>example</li>
-            </div>
-          </div>
+          <Droppable droppableId="done-drop-zone">
+            {(provided) => (
+              <div className="board-column">
+                <h2>Done</h2>
+                <div
+                  className="done-todos"
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                >
+                  <li>example</li>
+                  <ul>
+                    {doneList.map((todo, index) => {
+                      return (
+                        <Draggable
+                          key={todo.id}
+                          draggableId={todo.id.toString()}
+                          index={index}
+                        >
+                          {(provided) => (
+                            <li
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              ref={provided.innerRef}
+                              className="note"
+                            >
+                              {todo.todo}
+                            </li>
+                          )}
+                        </Draggable>
+                      );
+                    })}
+                    {provided.placeholder}
+                  </ul>
+                </div>
+              </div>
+            )}
+          </Droppable>
         </div>
       </DragDropContext>
     </div>
