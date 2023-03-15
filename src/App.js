@@ -143,7 +143,10 @@ function App() {
                               className="note"
                             >
                               {todo.todo}
-                              <button onClick={() => removeTodo(todo.id)}>
+                              <button
+                                className="remove-btn"
+                                onClick={() => removeTodo(todo.id)}
+                              >
                                 X
                               </button>
                             </li>
@@ -183,7 +186,10 @@ function App() {
                               className="note"
                             >
                               {todo.todo}
-                              <button onClick={() => removeTodo(todo.id)}>
+                              <button
+                                className="remove-btn"
+                                onClick={() => removeTodo(todo.id)}
+                              >
                                 X
                               </button>
                             </li>
@@ -223,7 +229,10 @@ function App() {
                               className="note"
                             >
                               {todo.todo}
-                              <button onClick={() => removeTodo(todo.id)}>
+                              <button
+                                className="remove-btn"
+                                onClick={() => removeTodo(todo.id)}
+                              >
                                 X
                               </button>
                             </li>
