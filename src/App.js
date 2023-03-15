@@ -13,7 +13,8 @@ function App() {
   // add todo item from input to todo list
   const addTodo = () => {
     if (!todo) {
-      alert("Enter a todo item");
+      alert("Invalid input - enter a todo item");
+      return;
     }
     const newTodo = {
       id: Math.floor(Math.random() * 1000),
@@ -22,6 +23,26 @@ function App() {
     setTodoList((todoList) => [...todoList, newTodo]);
     console.log(newTodo);
     setTodo("");
+  };
+
+  // remove todo item
+  const removeTodo = (id) => {
+    console.log("clicked remove ", id);
+    setTodoList(
+      todoList.filter((todo) => {
+        return todo.id !== id;
+      })
+    );
+    setDoingList(
+      doingList.filter((todo) => {
+        return todo.id !== id;
+      })
+    );
+    setDoneList(
+      doneList.filter((todo) => {
+        return todo.id !== id;
+      })
+    );
   };
 
   function handleOnDragEnd(result) {
@@ -82,6 +103,7 @@ function App() {
     <div className="App">
       <header>
         <h1>To Do Board</h1>
+        <span>This App is intended for larger screens</span>
         <div className="inputContainer">
           <input
             type="text"
@@ -101,7 +123,7 @@ function App() {
               <div className="board-column">
                 <h2>To Do</h2>
                 <div
-                  className="todo-todos"
+                  className="todo-todos task-containers"
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                 >
@@ -121,6 +143,9 @@ function App() {
                               className="note"
                             >
                               {todo.todo}
+                              <button onClick={() => removeTodo(todo.id)}>
+                                X
+                              </button>
                             </li>
                           )}
                         </Draggable>
@@ -138,7 +163,7 @@ function App() {
               <div className="board-column">
                 <h2>Doing</h2>
                 <div
-                  className="doing-todos"
+                  className="doing-todos task-containers"
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                 >
@@ -158,6 +183,9 @@ function App() {
                               className="note"
                             >
                               {todo.todo}
+                              <button onClick={() => removeTodo(todo.id)}>
+                                X
+                              </button>
                             </li>
                           )}
                         </Draggable>
@@ -175,7 +203,7 @@ function App() {
               <div className="board-column">
                 <h2>Done</h2>
                 <div
-                  className="done-todos"
+                  className="done-todos task-containers"
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                 >
@@ -195,6 +223,9 @@ function App() {
                               className="note"
                             >
                               {todo.todo}
+                              <button onClick={() => removeTodo(todo.id)}>
+                                X
+                              </button>
                             </li>
                           )}
                         </Draggable>
