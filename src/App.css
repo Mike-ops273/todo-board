@@ -20,6 +20,21 @@ ul {
 .board-column {
   border: solid 2px black;
 }
+.todo-todos {
+  border: solid 2px red;
+  min-height: 400px;
+  min-width: 200px;
+}
+.doing-todos {
+  border: solid 2px red;
+  min-height: 400px;
+  min-width: 200px;
+}
+.done-todos {
+  border: solid 2px red;
+  min-height: 400px;
+  min-width: 200px;
+}
 
 .note {
   background-color: yellow;

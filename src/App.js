@@ -7,9 +7,10 @@ function App() {
   // state hooks
   const [todo, setTodo] = useState("");
   const [todoList, setTodoList] = useState([]);
+  const [doingList, setDoingList] = useState([]);
   const [doneList, setDoneList] = useState([]);
 
-  // helper functions
+  // add todo item from input to todo list
   const addTodo = () => {
     if (!todo) {
       alert("Enter a todo item");
@@ -17,7 +18,6 @@ function App() {
     const newTodo = {
       id: Math.floor(Math.random() * 1000),
       todo: todo,
-      isDone: false,
     };
     setTodoList((todoList) => [...todoList, newTodo]);
     console.log(newTodo);
@@ -26,7 +26,6 @@ function App() {
 
   function handleOnDragEnd(result) {
     console.log(result);
-
     // invalid destination
     if (!result.destination) return;
     //same destination and index
@@ -39,12 +38,16 @@ function App() {
     // now initialize helper variables for valid moves
     let task;
     const undone = todoList;
+    const active = doingList;
     const done = doneList;
 
     // check origin and remove task
     if (result.source.droppableId === "todo-drop-zone") {
       task = undone[result.source.index];
       undone.splice(result.source.index, 1);
+    } else if (result.source.droppableId === "doing-drop-zone") {
+      task = active[result.source.index];
+      active.splice(result.source.index, 1);
     } else {
       //if source id is done-drop-zone
       task = done[result.source.index];
@@ -54,6 +57,8 @@ function App() {
     // add task to new zone
     if (result.destination.droppableId === "todo-drop-zone") {
       undone.splice(result.destination.index, 0, task);
+    } else if (result.destination.droppableId === "doing-drop-zone") {
+      active.splice(result.destination.index, 0, task);
     } else {
       // if destination id is done-drop-zone
       done.splice(result.destination.index, 0, task);
@@ -61,6 +66,7 @@ function App() {
 
     //finally update state
     setTodoList(undone);
+    setDoingList(active);
     setDoneList(done);
 
     /*
@@ -99,7 +105,6 @@ function App() {
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                 >
-                  <li>example</li>
                   <ul>
                     {todoList.map((todo, index) => {
                       return (
@@ -127,6 +132,44 @@ function App() {
               </div>
             )}
           </Droppable>
+          {/*SPACER*/}
+          <Droppable droppableId="doing-drop-zone">
+            {(provided) => (
+              <div className="board-column">
+                <h2>Doing</h2>
+                <div
+                  className="doing-todos"
+                  {...provided.droppableProps}
+                  ref={provided.innerRef}
+                >
+                  <ul>
+                    {doingList.map((todo, index) => {
+                      return (
+                        <Draggable
+                          key={todo.id}
+                          draggableId={todo.id.toString()}
+                          index={index}
+                        >
+                          {(provided) => (
+                            <li
+                              {...provided.draggableProps}
+                              {...provided.dragHandleProps}
+                              ref={provided.innerRef}
+                              className="note"
+                            >
+                              {todo.todo}
+                            </li>
+                          )}
+                        </Draggable>
+                      );
+                    })}
+                    {provided.placeholder}
+                  </ul>
+                </div>
+              </div>
+            )}
+          </Droppable>
+          {/*SPACER*/}
           <Droppable droppableId="done-drop-zone">
             {(provided) => (
               <div className="board-column">
@@ -136,7 +179,6 @@ function App() {
                   {...provided.droppableProps}
                   ref={provided.innerRef}
                 >
-                  <li>example</li>
                   <ul>
                     {doneList.map((todo, index) => {
                       return (
