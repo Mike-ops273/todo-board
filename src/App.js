@@ -89,13 +89,6 @@ function App() {
     setTodoList(undone);
     setDoingList(active);
     setDoneList(done);
-
-    /*
-    const items = Array.from(todoList);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-    setTodoList(items);
-    */
   }
 
   // render
@@ -114,7 +107,6 @@ function App() {
           />
           <button onClick={() => addTodo()}>Add</button>
         </div>
-        {todo}
       </header>
       <DragDropContext onDragEnd={handleOnDragEnd}>
         <div className="todos-container">
@@ -160,7 +152,6 @@ function App() {
               </div>
             )}
           </Droppable>
-          {/*SPACER*/}
           <Droppable droppableId="doing-drop-zone">
             {(provided) => (
               <div className="board-column">
@@ -203,7 +194,6 @@ function App() {
               </div>
             )}
           </Droppable>
-          {/*SPACER*/}
           <Droppable droppableId="done-drop-zone">
             {(provided) => (
               <div className="board-column">
